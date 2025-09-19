@@ -1,12 +1,13 @@
 import { useRouter } from "expo-router";
 import {
-    addDoc,
-    collection,
-    doc,
-    getDocs,
-    query,
-    updateDoc,
-    where,
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
 } from "firebase/firestore";
 import { createContext, useState } from "react";
 import { db } from "../firebaseConfig";
@@ -100,6 +101,21 @@ export default function SchoolSchedProvider({ children }) {
     }
   }
 
+  async function editTask(taskId, newText) {
+  const taskRef = doc(db, "Tasks", taskId);
+  await updateDoc(taskRef, { text: newText });
+  setTasks(prev =>
+    prev.map(t => (t.id === taskId ? { ...t, text: newText } : t))
+  );
+}
+
+// 🔹 Delete Task
+async function deleteTask(taskId) {
+  const taskRef = doc(db, "Tasks", taskId);
+  await deleteDoc(taskRef);
+  setTasks(prev => prev.filter(t => t.id !== taskId));
+}
+
   // 🔹 Logout
   function logout() {
     setUser(null);
@@ -118,6 +134,8 @@ export default function SchoolSchedProvider({ children }) {
         fetchTasks,
         toggleTask, // ✅ exposed merged version
         logout,
+        editTask,
+        deleteTask
       }}
     >
       {children}

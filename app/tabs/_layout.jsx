@@ -20,7 +20,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="todo"
         options={{
-          title: "To Do",
+          title: "Schedules",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="list-outline" size={size} color={color} />
           ),
